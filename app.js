@@ -1,38 +1,30 @@
-import { getUsuarios, getPost, getCommets, getAlbums, getPhotos } from "./modulos/index.js";
+import {listarTareasPendientes,solicitarUsuarios,solicitarUsuariosUsername,filtrarPostsYComentarios,usuariosTodo} from "./modulos/index.js";
 
-const URL = "https://jsonplaceholder.typicode.com";
+async function main() {
+    const opcion = prompt("Seleccione el número del ejercicio: \n1. Listar tareas pendientes por usuario \n2. Buscar usuario por username + álbumes + fotos\n3. Filtrar posts por nombre y agregar comentarios\n4. Listar nombre y teléfono de usuarios\n5. Consultar usuarios con posts + comentarios + álbumes + fotos");
 
-// Funcion para obtener datos de usuarios, sus posts, comentarios, albumes y fotos
-const manejardatos = async () => {
-    try {
-        
-    
-    const usuarios = await getUsuarios(URL);// Obtener todos los usuarios
-        return await Promise.all(usuarios.map(async (usuario) => {
-            const posts = await getPost(URL, usuario);// Obtener los posts del usuario
-            const albums = await getAlbums(URL, usuario);// Obtener los albumes del usuario
-
-            // Agregar comentarios a cada post  
-            const comentPost = await Promise.all(posts.map(async (post) => {
-                const coments = await getCommets(URL, post);
-                return { ...post, coments };// Retornar el post con sus comentarios
-            }));
-            
-            // Agregar fotos a cada album
-            const albumsWithPhotos = await Promise.all(albums.map(async (album) => {
-                const photos = await getPhotos(URL, album);
-                return { ...album, photos }; // Retornar el album con sus fotos
-            }));
-
-            return { ...usuario, comentPost, albums: albumsWithPhotos }; // Retornar usuario con toda la info
-        }));
-    } catch (error) {
-        console.error("Error obteniendo datos:", error);
+    switch (opcion) {
+        case "1":
+            await listarTareasPendientes();
+            break;
+        case "2":
+            const username = prompt("Ingrese el username del usuario:");
+            await solicitarUsuariosUsername(username);
+            break;
+        case "3":
+            const titulo = prompt("Ingrese el título o parte del título del post:");
+            await filtrarPostsYComentarios(titulo);
+            break;
+        case "4":
+            await solicitarUsuarios();
+            break;
+        case "5":
+            await usuariosTodo();
+            break;
+        default:
+            console.log("Opcion no valida");
     }
-};
+}
 
-// Ejecutar la funcion y mostrar el primer usuario en consola
-manejardatos().then((data) => {
-    console.log(data[0]); // Amuestra usuarios con posts, comentarios, albumes y fotos
-});
+main();
 
