@@ -13,7 +13,7 @@ export async function listarTareasPendientes() {
     const usuarios = await usuariosRest.json();
     const tareas = await tareasRest.json();
 
-    // Se recorre el arreglo de usuarios usando un bucle for clasico
+    // Se recorre el arreglo de usuarios usando un bucle for 
     for (let i = 0; i < usuarios.length; i++) {
         const usuario = usuarios[i]; // Se toma el usuario actual
 
